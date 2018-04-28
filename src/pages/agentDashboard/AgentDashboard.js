@@ -4,9 +4,14 @@ import { connect } from 'react-redux';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import { Row, Col } from 'reactstrap';
 
+/** https://www.npmjs.com/package/format-number */
+import format from 'format-number';
+
 import { fetchAgent } from '../../actions/agents';
 import Widget from '../../components/Widget';
 import s from './Dashboard.scss';
+
+const accountingFormat = format({ prefix: '$' });
 
 class AgentDashboard extends React.Component {
   static propTypes = {
@@ -14,11 +19,13 @@ class AgentDashboard extends React.Component {
     // isFetching: PropTypes.bool,
     // isAuthenticated: PropTypes.bool,
     // errorMessage: PropTypes.string,
-    agentIds: PropTypes.array
+    agentIds: PropTypes.array,
+    agents: PropTypes.object
   };
 
   static defaultProps = {
-    agentIds: []
+    agentIds: [],
+    agents: {}
   };
 
   componentDidMount() {
@@ -32,7 +39,10 @@ class AgentDashboard extends React.Component {
   }
 
   render() {
-    const { agentIds } = this.props;
+    const { agentIds, agents } = this.props;
+    const agent = agents[String(agentIds[0])];
+
+    console.log('agent: ', agent);
 
     return (
       <div className={s.root}>
@@ -41,9 +51,15 @@ class AgentDashboard extends React.Component {
           <Col lg={6}>
             <Widget title={<h5>Example <span className="fw-semi-bold">Widget</span></h5>}>
               <div>
-                {agentIds.join()}
                 <p className="lead">
-                  Howdy!
+                  Agent Ids: <br />
+                  {agentIds.join(', ')}
+                </p>
+                <p className="lead">
+                  Agent Data: <br />
+                  niprId: { agent ? agent.niprId : '' } <br />
+                  totalAgentPremium: { agent ? accountingFormat(agent.totalAgentPremium) : '' }
+
                 </p>
               </div>
             </Widget>
@@ -56,10 +72,11 @@ class AgentDashboard extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    isFetching: state.agents.isFetching,
-    isAuthenticated: state.agents.isAuthenticated,
-    errorMessage: state.agents.errorMessage,
-    agentIds: state.agents.agentIds
+    isFetching: state.agentData.isFetching,
+    isAuthenticated: state.agentData.isAuthenticated,
+    errorMessage: state.agentData.errorMessage,
+    agentIds: state.agentData.agentIds,
+    agents: state.agentData.agents
   };
 }
 
