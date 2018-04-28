@@ -11,7 +11,7 @@ class Dashboard extends React.Component {
       <div className={s.root}>
         <h1 className="page-title">Agent <strong>Opportunity</strong></h1>
         <Row>
-          <Col lg={6}>
+          <Col lg={8}>
             <Widget title={<h5><span className="fw-semi-bold">Welcome</span></h5>}>
               <div>
                 <p className="lead">
