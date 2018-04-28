@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {
-  Row, Col, Form, FormGroup, Label, Input, ButtonToolbar, Button
+  Row, Col, Form, FormGroup, Label, Input, ButtonToolbar, Button, Progress
 } from 'reactstrap';
 
 /** https://www.npmjs.com/package/format-number */
@@ -80,6 +80,23 @@ class AgentDashboard extends React.Component {
       agent: {},
       errorMessage: ''
     });
+  }
+
+  scaleProgress(value) {
+    if (value == null) {
+      return 0;
+    }
+    return (value * 10) % 100;
+  }
+
+  colorProgress(value) {
+    let scaleValue = this.scaleProgress(value);
+    if (scaleValue < 50) {
+      return 'success';
+    } else if (scaleValue < 75) {
+      return 'warning';
+    } 
+    return 'danger';
   }
 
   render() {
@@ -189,28 +206,6 @@ class AgentDashboard extends React.Component {
                     <Input type="text" name="averageWrittenCommission" id="averageWrittenCommission" value={accountingFormat(agent.averageWrittenCommission)} className="input-transparent" />
                   </Col>
                 </FormGroup>
-
-                <FormGroup row>
-                  <Col md={3}>
-                    <Label htmlFor="averageAgentExposure" className="col-form-label float-md-left">
-                      Average Agent Exposure
-                    </Label>
-                  </Col>
-                  <Col md={9}>
-                    <Input type="text" name="averageAgentExposure" id="averageAgentExposure" value={agent.averageAgentExposure} className="input-transparent" />
-                  </Col>
-                </FormGroup>
-
-                <FormGroup row>
-                  <Col md={3}>
-                    <Label htmlFor="averageWrittenExposure" className="col-form-label float-md-left">
-                      Average Written Exposure
-                    </Label>
-                  </Col>
-                  <Col md={9}>
-                    <Input type="text" name="averageWrittenExposure" id="averageWrittenExposure" value={agent.averageWrittenExposure} className="input-transparent" />
-                  </Col>
-                </FormGroup>
               </Form>
 
               {/* <div>
@@ -219,6 +214,18 @@ class AgentDashboard extends React.Component {
                   Total Agent Premium: <strong>{ }</strong> <br />
                 </p>
               </div> */}
+            </Widget>
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={4} md={12} xs={12}>
+            <Widget
+              title={<h5><i className="fa fa-arrow-right" /> Agent Exposure</h5>}
+            >
+              <h5 className="mt-0 mb-xs font-weight-normal">Agent's Exposure: {agent.averageAgentExposure}</h5><br/>
+              <Progress color={this.colorProgress(agent.averageAgentExposure)} value={this.scaleProgress(agent.averageAgentExposure)} className="progress-lg" />
+              <h5 className="mt-0 mb-xs font-weight-normal">Aggregate Agents' Exposure: {agent.averageWrittenExposure}</h5><br/>
+              <Progress color={this.colorProgress(agent.averageWrittenExposure)} value={this.scaleProgress(agent.averageWrittenExposure)} className="progress-lg" />
             </Widget>
           </Col>
         </Row>
@@ -236,5 +243,6 @@ function mapStateToProps(state) {
     agents: state.agentData.agents
   };
 }
+
 
 export default connect(mapStateToProps)(withStyles(s)(AgentDashboard));
