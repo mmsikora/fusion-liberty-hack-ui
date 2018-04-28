@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {
-  Row, Col, Form, FormGroup, Label, Input, Button, Progress
+  Alert, Row, Col, Form, FormGroup, Label, Input, Button, Progress
 } from 'reactstrap';
 import $ from 'jquery';
 /* eslint-disable */
@@ -48,7 +48,8 @@ class AgentDashboard extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.initEasyPieChart = this.initEasyPieChart.bind(this);
-    this.updateEasyPieChart = this.updateEasyPieChart.bind(this);
+    this.initSparklinePie = this.initSparklinePie.bind(this);
+    this.initEasyPieChart = this.initEasyPieChart.bind(this);
 
     this.state = {
       agentId: '',
@@ -68,6 +69,7 @@ class AgentDashboard extends React.Component {
   }
 
   componentDidUpdate() {
+    this.initSparklinePie();
     this.updateEasyPieChart();
   }
 
@@ -94,7 +96,7 @@ class AgentDashboard extends React.Component {
     } else {
       this.setState({
         agent: {},
-        errorMessage: 'hmm. Agent not found'
+        errorMessage: 'Hmm. Agent ID not found!'
       });
     }
   }
@@ -109,8 +111,37 @@ class AgentDashboard extends React.Component {
     });
   }
 
+  initSparklinePie() {
+    // const data = [2, 4, 6];
+
+    const { agent } = this.state;
+    const states = agent.states || [];
+
+    const data = states.map((state) => {
+      return state.amount;
+    });
+
+    const tooltipValues = {};
+    states.forEach((state, index) => {
+      tooltipValues[index] = state.name;
+    });
+
+    const option = {
+      type: 'pie',
+      width: '100px',
+      height: '100px',
+      sliceColors: ['#F5CB7B', '#FAEEE5', '#f0f0f0'],
+      tooltipFormat: '<span style="color: {{color}}">&#9679;</span> {{offset:names}}: {{value}} ({{percent.1}}%)',
+      tooltipValueLookups: {
+        names: tooltipValues
+      }
+    };
+
+    $(this.sparklinePie).sparkline(data, option);
+  }
+
   updateEasyPieChart() {
-    const {agent} = this.state;
+    const { agent } = this.state;
     const premiumRatio = agent.premiumsRatio || 0;
     // console.log('calling updateEasyPieChart! premiumRatio: ', premiumRatio);
 
@@ -155,7 +186,7 @@ class AgentDashboard extends React.Component {
   render() {
     // const { agentIds } = this.props;
     // console.log(`all agent ids loaded: ${agentIds.join(', ')}`);
-    const { agentId, agent } = this.state;
+    const { agentId, agent, errorMessage } = this.state;
 
     const statsPremiumsRatio = agent.premiumsRatio ? String(Math.round(agent.premiumsRatio)) : '0';
 
@@ -181,6 +212,7 @@ class AgentDashboard extends React.Component {
                   </Col>
                 </FormGroup>
               </Form>
+              {errorMessage && <Alert color="danger"> {errorMessage}</Alert>}
             </Widget>
 
 
@@ -263,36 +295,55 @@ class AgentDashboard extends React.Component {
         </Row>
 
         <Row>
-          <Col lg={6} xl={4} xs={12}>
+          <Col lg={6} xl={4} xs={6}>
             <Widget
-              title={<h5> <span className="fw-semi-bold">Comparison</span></h5>}
+              title={<h5> <span className="fw-semi-bold">Percentage of Total Premiums</span></h5>}
               close collapse
             >
               <div className="clearfix">
-                <h4 className="">Percentage of Total Premiums</h4>
 
                 <div className="text-center">
                   <div ref={(r) => { this.easyPieChart = r; }} className="easy-pie-chart mb-lg" data-percent="0">{`${String(statsPremiumsRatio)}`} &#37;
                   </div>
                 </div>
-                { agent.totalAgentPremium &&
+                {agent.totalAgentPremium &&
                   <p className="fs-mini text-muted">
-                  TotalAgent ( {accountingFormat(agent.totalAgentPremium)}) vs Total Written Premiums ({accountingFormat(agent.totalWrittenPremium)})
+                    TotalAgent ( {accountingFormat(agent.totalAgentPremium)}) vs Total Written Premiums ({accountingFormat(agent.totalWrittenPremium)})
                   </p>
                 }
               </div>
             </Widget>
-            </Col>
-            <Col lg={4} md={12} xs={12}>
+          </Col>
+
+
+          <Col lg={6} xl={3} xs={12}>
+            <Widget
+              title={<h5> Policies Written by <span className="fw-semi-bold">State</span></h5>}
+              collapse close
+            >
+              <div>
+                <p className="fs-mini text-muted">
+                  Hover over slice to see details.
+                </p>
+                <div ref={(r) => { this.sparklinePie = r; }} className="chart-overflow-bottom mb-0 text-center" />
+              </div>
+            </Widget>
+          </Col>
+
+
+
+          <Col lg={4} md={12} xs={12}>
             <Widget
               title={<h5><i className="fa fa-arrow-right" /> Agent Exposure</h5>}
             >
-              <h5 className="mt-0 mb-xs font-weight-normal">Agent's Exposure: {agent.averageAgentExposure}</h5><br/>
+              <h5 className="mt-0 mb-xs font-weight-normal">Agent's Exposure: {agent.averageAgentExposure}</h5><br />
               <Progress color={this.colorProgress(agent.averageAgentExposure)} value={this.scaleProgress(agent.averageAgentExposure)} className="progress-lg" />
-              <h5 className="mt-0 mb-xs font-weight-normal">Aggregate Agents' Exposure: {agent.averageWrittenExposure}</h5><br/>
+              <h5 className="mt-0 mb-xs font-weight-normal">Aggregate Agents' Exposure: {agent.averageWrittenExposure}</h5><br />
               <Progress color={this.colorProgress(agent.averageWrittenExposure)} value={this.scaleProgress(agent.averageWrittenExposure)} className="progress-lg" />
             </Widget>
           </Col>
+
+
         </Row>
 
       </div>
