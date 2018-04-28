@@ -89,7 +89,7 @@ class AgentDashboard extends React.Component {
 
     return (
       <div className={s.root}>
-        <h1 className="page-title">Agent</h1>
+        <h1 className="page-title">Agent <strong>Portal</strong></h1>
         <Row>
           <Col lg={8}>
             <Widget>
@@ -100,16 +100,14 @@ class AgentDashboard extends React.Component {
                       Enter Your Agent ID
                     </Label>
                   </Col>
-                  <Col md={9}>
+                  <Col md={5}>
                     <Input type="text" name="agentId" id="agentId" value={agentId} className="input-transparent" onChange={this.handleChange} />
                   </Col>
-                </FormGroup>
-                <div className="form-actions">
-                  <ButtonToolbar className="justify-content-md-center">
+                  <Col md={4}>
                     <Button type="submit" color="success">Submit</Button>
-                    <Button type="button" color="secondary" onClick={this.handleCancel}>Cancel</Button>
-                  </ButtonToolbar>
-                </div>
+                    <Button type="button" color="secondary" onClick={this.handleCancel}>Clear</Button>
+                  </Col>
+                </FormGroup>
               </Form>
             </Widget>
             <Widget title={<h5>Agent <span className="fw-semi-bold">Data</span></h5>}>
@@ -127,14 +125,14 @@ class AgentDashboard extends React.Component {
                 <FormGroup row>
                   <Col md={3}>
                     <Label htmlFor="totalAgentPremium" className="col-form-label float-md-left">
-                      Total Agent Premium
+                      Total Premium
                     </Label>
                   </Col>
                   <Col md={9}>
                     <Input type="text" name="totalAgentPremium" id="totalAgentPremium" value={accountingFormat(agent.totalAgentPremium)} className="input-transparent" />
                   </Col>
                 </FormGroup>
-                <FormGroup row>
+                {/* <FormGroup row>
                   <Col md={3}>
                     <Label htmlFor="totalWrittenPremium" className="col-form-label float-md-left">
                       Total Written Premium
@@ -143,11 +141,11 @@ class AgentDashboard extends React.Component {
                   <Col md={9}>
                     <Input type="text" name="totalWrittenPremium" id="totalWrittenPremium" value={accountingFormat(agent.totalWrittenPremium)} className="input-transparent" />
                   </Col>
-                </FormGroup>
+                </FormGroup> */}
                 <FormGroup row>
                   <Col md={3}>
                     <Label htmlFor="totalAgentCommission" className="col-form-label float-md-left">
-                      Total Agent Commission
+                      Total Commission
                     </Label>
                   </Col>
                   <Col md={9}>
@@ -155,7 +153,7 @@ class AgentDashboard extends React.Component {
                   </Col>
                 </FormGroup>
 
-                <FormGroup row>
+                {/* <FormGroup row>
                   <Col md={3}>
                     <Label htmlFor="totalWrittenCommission" className="col-form-label float-md-left">
                       Total Written Commission
@@ -164,12 +162,12 @@ class AgentDashboard extends React.Component {
                   <Col md={9}>
                     <Input type="text" name="totalWrittenCommission" id="totalWrittenCommission" value={accountingFormat(agent.totalWrittenCommission)} className="input-transparent" />
                   </Col>
-                </FormGroup>
+                </FormGroup> */}
 
                 <FormGroup row>
                   <Col md={3}>
                     <Label htmlFor="averageAgentCommission" className="col-form-label float-md-left">
-                      Average Agent Commission
+                      Average Commission
                     </Label>
                   </Col>
                   <Col md={9}>
@@ -177,7 +175,7 @@ class AgentDashboard extends React.Component {
                   </Col>
                 </FormGroup>
 
-                <FormGroup row>
+                {/* <FormGroup row>
                   <Col md={3}>
                     <Label htmlFor="averageWrittenCommission" className="col-form-label float-md-left">
                       Average Written Commission
@@ -186,12 +184,12 @@ class AgentDashboard extends React.Component {
                   <Col md={9}>
                     <Input type="text" name="averageWrittenCommission" id="averageWrittenCommission" value={accountingFormat(agent.averageWrittenCommission)} className="input-transparent" />
                   </Col>
-                </FormGroup>
+                </FormGroup> */}
 
                 <FormGroup row>
                   <Col md={3}>
                     <Label htmlFor="averageAgentExposure" className="col-form-label float-md-left">
-                      Average Agent Exposure
+                      Average Exposure
                     </Label>
                   </Col>
                   <Col md={9}>
@@ -199,7 +197,7 @@ class AgentDashboard extends React.Component {
                   </Col>
                 </FormGroup>
 
-                <FormGroup row>
+                {/* <FormGroup row>
                   <Col md={3}>
                     <Label htmlFor="averageWrittenExposure" className="col-form-label float-md-left">
                       Average Written Exposure
@@ -208,7 +206,7 @@ class AgentDashboard extends React.Component {
                   <Col md={9}>
                     <Input type="text" name="averageWrittenExposure" id="averageWrittenExposure" value={agent.averageWrittenExposure} className="input-transparent" />
                   </Col>
-                </FormGroup>
+                </FormGroup> */}
               </Form>
 
               {/* <div>
