@@ -333,9 +333,7 @@ class AgentDashboard extends React.Component {
               title={<h5> <span className="fw-semi-bold">Policy Classes Written</span></h5>}
               close collapse
             >
-              
-                  {this.createTable(agent.classCodes)}
-              
+              {this.createTable(agent.classCodes)} 
             </Widget>
           </Col>
         </Row>
