@@ -83,10 +83,8 @@ class AgentDashboard extends React.Component {
   }
 
   render() {
-    const { agentIds } = this.props;
-    console.log(`all agent ids loaded: ${agentIds.join(', ')}`);
-    // const agent = agents[String(agentIds[0])];
-
+    // const { agentIds } = this.props;
+    // console.log(`all agent ids loaded: ${agentIds.join(', ')}`);
     const { agentId, agent } = this.state;
 
     return (

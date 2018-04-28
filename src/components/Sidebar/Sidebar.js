@@ -49,7 +49,7 @@ class Sidebar extends React.Component {
         >
           <ul className={s.nav}>
             <LinksGroup header="Home" headerLink="/app" iconName="fa-home" />
-            <LinksGroup header="Agent" headerLink="/app/agent" iconName="fa-leaf" />
+            <LinksGroup header="Agent Portal" headerLink="/app/agent" iconName="fa-user" />
 
             <LinksGroup
               onActiveSidebarItemChange={() => this.props.dispatch(changeActiveSidebarItem('/app/statistics'))}
@@ -70,7 +70,7 @@ class Sidebar extends React.Component {
               ]}
             />
 
-            <LinksGroup header="Another Page" headerLink="/app/another" iconName="fa-tree" />
+            <LinksGroup header="Another Page" headerLink="/app/another" iconName="fa-leaf" />
           </ul>
 
           <SidebarLabelsList />
