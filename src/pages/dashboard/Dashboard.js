@@ -12,7 +12,7 @@ class Dashboard extends React.Component {
         <h1 className="page-title">Agent <strong>Opportunity</strong></h1>
         <Row>
           <Col lg={8}>
-            <Widget title={<h5><span className="fw-semi-bold">Welcome</span></h5>}>
+            <Widget title={<h2><span className="fw-semi-bold">Welcome</span></h2>}>
               <div>
                 <p className="lead">
                   The Liberty Mutual Agent Opportunity provides insight into <strong>Split Rated Business Owners Policy</strong> (SRB).
