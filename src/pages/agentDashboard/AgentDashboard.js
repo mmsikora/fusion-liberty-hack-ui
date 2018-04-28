@@ -51,6 +51,11 @@ class AgentDashboard extends React.Component {
     const { agents } = this.props;
     const agent = agents[String(agentId)];
     if (agent) {
+      agent.totalNewPolicies = agent.states ?
+        agent.states.reduce((total, state) => {
+          return total + Number(state.amount);
+        }, 0) : 0;
+
       this.setState({
         agent,
         errorMessage: ''
@@ -88,7 +93,7 @@ class AgentDashboard extends React.Component {
     const { agentId, agent } = this.state;
 
     return (
-      <div className={s.root}>
+      <div className={`${s.root}`}>
         <h1 className="page-title">Agent <strong>Portal</strong></h1>
         <Row>
           <Col lg={8}>
@@ -110,7 +115,36 @@ class AgentDashboard extends React.Component {
                 </FormGroup>
               </Form>
             </Widget>
-            <Widget title={<h5>Agent <span className="fw-semi-bold">Data</span></h5>}>
+
+
+            <Widget title={<h5><span className="fw-semi-bold">Overview</span></h5>}>
+
+              <Row>
+                <Col lg={6} md={6} sm={6}>
+                  <div className="box">
+                    {agent.totalNewPolicies &&
+                      <div className="description">
+                        <i className="fa fa-briefcase" />&nbsp;
+                        <strong>{agent.totalNewPolicies}</strong> new business policies
+                      </div>
+                    }
+                  </div>
+                </Col>
+
+                <Col lg={6} md={6} sm={6}>
+                  <div className="box">
+                    {agent.averageAgentExposure &&
+                      <div className="description">
+                        <i className="fa fa-fire" />&nbsp;
+                        <strong> {agent.averageAgentExposure}</strong> Average Exposure
+                    </div>
+                    }
+                  </div>
+                </Col>
+              </Row>
+
+              <br />
+
               <Form >
                 <FormGroup row>
                   <Col md={3}>
@@ -186,7 +220,7 @@ class AgentDashboard extends React.Component {
                   </Col>
                 </FormGroup> */}
 
-                <FormGroup row>
+                {/* <FormGroup row>
                   <Col md={3}>
                     <Label htmlFor="averageAgentExposure" className="col-form-label float-md-left">
                       Average Exposure
@@ -195,7 +229,7 @@ class AgentDashboard extends React.Component {
                   <Col md={9}>
                     <Input type="text" name="averageAgentExposure" id="averageAgentExposure" value={agent.averageAgentExposure} className="input-transparent" />
                   </Col>
-                </FormGroup>
+                </FormGroup> */}
 
                 {/* <FormGroup row>
                   <Col md={3}>
@@ -215,9 +249,11 @@ class AgentDashboard extends React.Component {
                   Total Agent Premium: <strong>{ }</strong> <br />
                 </p>
               </div> */}
+
             </Widget>
           </Col>
         </Row>
+
       </div>
     );
   }
