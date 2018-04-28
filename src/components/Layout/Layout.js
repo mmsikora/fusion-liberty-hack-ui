@@ -9,6 +9,13 @@ import { Switch, Route, withRouter } from 'react-router';
 import loadAnother from 'bundle-loader?lazy!../../pages/another/Another';
 /* eslint-enable */
 
+// an example of react-router code-splitting
+/* eslint-disable */
+import loadStatisticsStats from 'bundle-loader?lazy!../../pages/statistics/stats';
+import loadStatisticsCharts from 'bundle-loader?lazy!../../pages/statistics/charts';
+import loadStatisticsRealtime from 'bundle-loader?lazy!../../pages/statistics/realtime';
+/* eslint-enable */
+
 import { fetchAgents } from '../../actions/agents';
 
 import s from './Layout.scss';
@@ -19,6 +26,11 @@ import Bundle from '../../core/Bundle';
 // Dashboard component is loaded directly as an example of server side rendering
 import Dashboard from '../../pages/dashboard/Dashboard';
 import AgentDashboard from '../../pages/agentDashboard/AgentDashboard';
+
+
+const StatisticsStatsBundle = Bundle.generateBundle(loadStatisticsStats);
+const StatisticsChartsBundle = Bundle.generateBundle(loadStatisticsCharts);
+const StatisticsRealtimeBundle = Bundle.generateBundle(loadStatisticsRealtime);
 
 const AnotherBundle = Bundle.generateBundle(loadAnother);
 
@@ -46,6 +58,9 @@ class Layout extends React.Component {
               <Route path="/app" exact component={Dashboard} />
               <Route path="/app/agent" exact component={AgentDashboard} />
               <Route path="/app/another" exact component={AnotherBundle} />
+              <Route path="/app/statistics/stats" exact component={StatisticsStatsBundle} />
+              <Route path="/app/statistics/charts" exact component={StatisticsChartsBundle} />
+              <Route path="/app/statistics/realtime" exact component={StatisticsRealtimeBundle} />
             </Switch>
             <footer className={s.footer}>
               Agent Opportunity &bull; Liberty Mutual &copy; { String(today.getFullYear()) }

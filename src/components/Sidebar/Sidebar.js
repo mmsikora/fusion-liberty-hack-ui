@@ -8,6 +8,7 @@ import s from './Sidebar.scss';
 import LinksGroup from './LinksGroup/LinksGroup';
 import SidebarLabelsList from './SidebarLabelsList';
 import SidebarProjectsList from './SidebarProjectsList';
+import { changeActiveSidebarItem } from '../../actions/navigation';
 
 class Sidebar extends React.Component {
 
@@ -49,7 +50,27 @@ class Sidebar extends React.Component {
           <ul className={s.nav}>
             <LinksGroup header="Dashboard" headerLink="/app" iconName="fa-home" />
             <LinksGroup header="Agent Dashboard" headerLink="/app/agent" iconName="fa-area-chart" />
+
             <LinksGroup header="State by State" headerLink="/app/agent" iconName="fa-area-chart" />
+
+            <LinksGroup
+              onActiveSidebarItemChange={() => this.props.dispatch(changeActiveSidebarItem('/app/statistics'))}
+              isActive={this.props.activeItem === '/app/statistics'}
+              header="Statistics"
+              iconName="fa-area-chart"
+              headerLink="/app/statistics"
+              childrenLinks={[
+                {
+                  name: 'Stats', link: '/app/statistics/stats',
+                },
+                {
+                  name: 'Charts', link: '/app/statistics/charts',
+                },
+                {
+                  name: 'Realtime', link: '/app/statistics/realtime'
+                }
+              ]}
+            />
 
             <LinksGroup header="Another Page" headerLink="/app/another" iconName="fa-tree" />
           </ul>

@@ -42,8 +42,6 @@ class AgentDashboard extends React.Component {
     const { agentIds, agents } = this.props;
     const agent = agents[String(agentIds[0])];
 
-    console.log('agent: ', agent);
-
     return (
       <div className={s.root}>
         <h1 className="page-title">Agent Dashboard <small><small>Performance</small></small></h1>
