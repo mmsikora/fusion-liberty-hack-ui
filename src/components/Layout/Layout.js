@@ -9,6 +9,8 @@ import { Switch, Route, withRouter } from 'react-router';
 import loadAnother from 'bundle-loader?lazy!../../pages/another/Another';
 /* eslint-enable */
 
+import { fetchAgents } from '../../actions/agents';
+
 import s from './Layout.scss';
 import Header from '../Header';
 import Sidebar from '../Sidebar';
@@ -16,17 +18,21 @@ import Bundle from '../../core/Bundle';
 
 // Dashboard component is loaded directly as an example of server side rendering
 import Dashboard from '../../pages/dashboard/Dashboard';
+import AgentDashboard from '../../pages/agentDashboard/AgentDashboard';
 
 const AnotherBundle = Bundle.generateBundle(loadAnother);
-
-
 
 class Layout extends React.Component {
 
   static propTypes = {
+    dispatch: PropTypes.func.isRequired,
     sidebarState: PropTypes.string.isRequired,
     sidebarPosition: PropTypes.string.isRequired,
   };
+
+  componentDidMount() {
+    this.props.dispatch(fetchAgents());
+  }
 
   render() {
     const today = new Date();
@@ -38,6 +44,7 @@ class Layout extends React.Component {
           <main className={s.content}>
             <Switch>
               <Route path="/app" exact component={Dashboard} />
+              <Route path="/app/agent" exact component={AgentDashboard} />
               <Route path="/app/another" exact component={AnotherBundle} />
             </Switch>
             <footer className={s.footer}>

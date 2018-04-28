@@ -48,6 +48,7 @@ class Sidebar extends React.Component {
         >
           <ul className={s.nav}>
             <LinksGroup header="Dashboard" headerLink="/app" iconName="fa-home" />
+            <LinksGroup header="Agent Dashboard" headerLink="/app/agent" iconName="fa-home" />
             <LinksGroup header="Another Page" headerLink="/app/another" iconName="fa-tree" />
           </ul>
 

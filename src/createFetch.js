@@ -9,6 +9,7 @@ import fetch from 'isomorphic-fetch';
  * https://developer.mozilla.org/docs/Web/API/Fetch_API/Using_Fetch
  */
 function createFetch({ baseUrl, cookie }) {
+
   // NOTE: Tweak the default options to suite your application needs
   const defaults = {
     method: 'POST',
