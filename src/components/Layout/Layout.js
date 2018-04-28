@@ -16,7 +16,7 @@ import loadStatisticsCharts from 'bundle-loader?lazy!../../pages/statistics/char
 import loadStatisticsRealtime from 'bundle-loader?lazy!../../pages/statistics/realtime';
 /* eslint-enable */
 
-import { fetchAgents } from '../../actions/agents';
+import { fetchAgent, fetchAgents } from '../../actions/agents';
 
 import s from './Layout.scss';
 import Header from '../Header';
@@ -40,10 +40,27 @@ class Layout extends React.Component {
     dispatch: PropTypes.func.isRequired,
     sidebarState: PropTypes.string.isRequired,
     sidebarPosition: PropTypes.string.isRequired,
+    agentIds: PropTypes.array,
+    agents: PropTypes.object
+  };
+
+  static defaultProps = {
+    agentIds: [],
+    agents: {}
   };
 
   componentDidMount() {
-    this.props.dispatch(fetchAgents());
+    const { dispatch } = this.props;
+
+    dispatch(fetchAgents())
+    .then(() => {
+      const { agentIds } = this.props;
+      if (agentIds.length > 0) {
+        agentIds.forEach((agentId) => {
+          dispatch(fetchAgent(agentId));
+        });
+      }
+    });
   }
 
   render() {
@@ -76,6 +93,8 @@ function mapStateToProps(store) {
   return {
     sidebarState: store.navigation.sidebarState,
     sidebarPosition: store.navigation.sidebarPosition,
+    agentIds: store.agentData.agentIds,
+    agents: store.agentData.agents
   };
 }
 

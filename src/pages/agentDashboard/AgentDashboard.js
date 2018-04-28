@@ -7,7 +7,6 @@ import { Row, Col } from 'reactstrap';
 /** https://www.npmjs.com/package/format-number */
 import format from 'format-number';
 
-import { fetchAgent } from '../../actions/agents';
 import Widget from '../../components/Widget';
 import s from './Dashboard.scss';
 
@@ -27,16 +26,6 @@ class AgentDashboard extends React.Component {
     agentIds: [],
     agents: {}
   };
-
-  componentDidMount() {
-
-    const { agentIds, dispatch } = this.props;
-    if (agentIds.length > 0) {
-      dispatch(fetchAgent(agentIds[0]));
-      dispatch(fetchAgent(agentIds[1]));
-    }
-
-  }
 
   render() {
     const { agentIds, agents } = this.props;

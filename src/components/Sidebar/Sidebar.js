@@ -48,15 +48,13 @@ class Sidebar extends React.Component {
              ref={(nav) => { this.element = nav; }}
         >
           <ul className={s.nav}>
-            <LinksGroup header="Dashboard" headerLink="/app" iconName="fa-home" />
-            <LinksGroup header="Agent Dashboard" headerLink="/app/agent" iconName="fa-area-chart" />
-
-            <LinksGroup header="State by State" headerLink="/app/agent" iconName="fa-area-chart" />
+            <LinksGroup header="Home" headerLink="/app" iconName="fa-home" />
+            <LinksGroup header="Agent" headerLink="/app/agent" iconName="fa-leaf" />
 
             <LinksGroup
               onActiveSidebarItemChange={() => this.props.dispatch(changeActiveSidebarItem('/app/statistics'))}
               isActive={this.props.activeItem === '/app/statistics'}
-              header="Statistics"
+              header="Dashboards"
               iconName="fa-area-chart"
               headerLink="/app/statistics"
               childrenLinks={[

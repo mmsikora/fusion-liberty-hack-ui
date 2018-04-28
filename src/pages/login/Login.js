@@ -9,7 +9,7 @@ import s from './Login.scss'; // eslint-disable-line
 import { loginUser } from '../../actions/user';
 import Widget from '../../components/Widget';
 
-import backgroundImage from '../../images/lm-images/lm-homepage-concept.jpg';
+import backgroundImage from '../../images/lm-images/lm-homepage-concept-2.jpg';
 
 class Login extends React.Component {
 
@@ -62,7 +62,9 @@ class Login extends React.Component {
 
     return (
       <div className={s.root}>
-        {/* <img className="pull-left mt-1 mr-2" src={lmLogo} alt="Liberty Mutual" width="40" /> */}
+        <div className={`${s.loginBack}`}>
+          <img className={`pull-left ${s.loginImg}`} src={backgroundImage} alt="Liberty Mutual" width="100%" />
+        </div>
         <Widget className={`${s.widget}`}>
           <header className="text-center">
             <h5 className="fw-semi-bold">Login to your account</h5>
@@ -99,7 +101,7 @@ class Login extends React.Component {
           </Form>
           <footer className={s.footer}>
             <div className={s.footerText}>
-                Agent Opportunity &bull; Liberty Mutual &copy; { String(today.getFullYear()) }
+              Agent Opportunity &bull; Liberty Mutual &copy; {String(today.getFullYear())}
             </div>
           </footer>
         </Widget>

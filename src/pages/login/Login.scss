@@ -51,6 +51,19 @@
   }
 }
 
+.loginBack {
+
+  position:absolute;
+  top:-10px;
+  background-attachment:fixed;
+
+  .loginImg {
+    display: inline;
+    width: 100%;
+  }
+
+}
+
 .footer {
   margin: 0 (-$widget-padding-horizontal) (-$widget-padding-vertical);
   border-bottom-left-radius: $border-radius-base;

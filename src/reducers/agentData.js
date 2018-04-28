@@ -19,8 +19,6 @@ export default function agentData(state = {
   agentIds: [],
   agents: {}
 }, action) {
-  let agentData = {};
-
   switch (action.type) {
     case FETCH_AGENT_IDS_REQUEST:
       return Object.assign({}, state, {
@@ -58,9 +56,8 @@ export default function agentData(state = {
 
     case FETCH_AGENT_SUCCESS:
 
-      agentData = {};
-      // agentData[`agent-${String(agent.niprId)}`] = action.agent;
-      agentData[String(action.agent.niprId)] = action.agent;
+      const thisAgent = {};
+      thisAgent[String(action.agent.niprId)] = action.agent;
 
       // console.log('FETCH_AGENT_SUCCESS is called! ');
       // console.log('agentData: ', agentData);
@@ -68,7 +65,7 @@ export default function agentData(state = {
       return Object.assign({}, state, {
         isFetching: false,
         isAuthenticated: true,
-        agents: Object.assign({}, state.agents, agentData),
+        agents: Object.assign({}, state.agents, thisAgent),
         errorMessage: '',
       });
 
