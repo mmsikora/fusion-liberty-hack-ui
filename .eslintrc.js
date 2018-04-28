@@ -62,6 +62,7 @@ module.exports = {
       'padded-blocks': ['off'],
       'arrow-body-style': 'off',
       'no-case-declarations': 'off',
+      'object-curly-spacing': 'off',
       'react/no-unused-prop-types': 'off',
       'react/forbid-prop-types': 'off'
 

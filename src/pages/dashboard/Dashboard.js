@@ -11,12 +11,12 @@ class Dashboard extends React.Component {
       <div className={s.root}>
         <h1 className="page-title">Agent <strong>Opportunity</strong></h1>
         <Row>
-          <Col lg={6}>
-            <Widget title={<h3><span className="fw-semi-bold">Welcome</span></h3>}>
+          <Col lg={8}>
+            <Widget title={<h5><span className="fw-semi-bold">Welcome</span></h5>}>
               <div>
                 <p className="lead">
                   The Liberty Mutual Agent Opportunity provides insight into <strong>Split Rated Business Owners Policy</strong> (SRB).
-                  <br/><br/>
+                  <br/> <br/>
                   Built with <strong>React JS</strong> using
                   Redux, React Router and Server Side Rendering with Neo4j Graph Database!
                 </p>
@@ -27,8 +27,8 @@ class Dashboard extends React.Component {
               <div>
                 <p className="lead">
                   Competitive Dashboard or Prospecting Tools for Agents
-                   <br/><br/> 
-                   Give agents a view into how they are performing at selling Split Rated Business Owner Policy (SRB) policies vs their peers, 
+                   <br/><br/>
+                   Give agents a view into how they are performing at selling Split Rated Business Owner Policy (SRB) policies vs their peers,
                    and give the business insight into performance and the classes of insurance being sold in the market.
                 </p>
               </div>
