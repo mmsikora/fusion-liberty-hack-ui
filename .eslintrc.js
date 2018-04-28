@@ -60,7 +60,10 @@ module.exports = {
       'css-modules/no-unused-class': ['off'],
       'comma-dangle': ['off'],
       'padded-blocks': ['off'],
-      'no-trailing-spaces': ['warning']
+      'arrow-body-style': 'off',
+      'no-case-declarations': 'off',
+      'react/no-unused-prop-types': 'off',
+      'react/forbid-prop-types': 'off'
 
     },
   };
