@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {
-  Row, Col, Form, FormGroup, Label, Input, Button
+  Row, Col, Form, FormGroup, Label, Input, Button, Progress
 } from 'reactstrap';
 import $ from 'jquery';
 /* eslint-disable */
@@ -135,6 +135,23 @@ class AgentDashboard extends React.Component {
     });
   }
 
+  scaleProgress(value) {
+    if (value == null) {
+      return 0;
+    }
+    return (value * 10) % 100;
+  }
+
+  colorProgress(value) {
+    const scaleValue = this.scaleProgress(value);
+    if (scaleValue < 50) {
+      return 'success';
+    } else if (scaleValue < 75) {
+      return 'warning';
+    }
+    return 'danger';
+  }
+
   render() {
     // const { agentIds } = this.props;
     // console.log(`all agent ids loaded: ${agentIds.join(', ')}`);
@@ -264,6 +281,16 @@ class AgentDashboard extends React.Component {
                   </p>
                 }
               </div>
+            </Widget>
+            </Col>
+            <Col lg={4} md={12} xs={12}>
+            <Widget
+              title={<h5><i className="fa fa-arrow-right" /> Agent Exposure</h5>}
+            >
+              <h5 className="mt-0 mb-xs font-weight-normal">Agent's Exposure: {agent.averageAgentExposure}</h5><br/>
+              <Progress color={this.colorProgress(agent.averageAgentExposure)} value={this.scaleProgress(agent.averageAgentExposure)} className="progress-lg" />
+              <h5 className="mt-0 mb-xs font-weight-normal">Aggregate Agents' Exposure: {agent.averageWrittenExposure}</h5><br/>
+              <Progress color={this.colorProgress(agent.averageWrittenExposure)} value={this.scaleProgress(agent.averageWrittenExposure)} className="progress-lg" />
             </Widget>
           </Col>
         </Row>
