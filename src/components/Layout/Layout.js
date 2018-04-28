@@ -11,6 +11,7 @@ import loadAnother from 'bundle-loader?lazy!../../pages/another/Another';
 
 // an example of react-router code-splitting
 /* eslint-disable */
+import loadAgentDashboard from 'bundle-loader?lazy!../../pages/agentDashboard/AgentDashboard';
 import loadStatisticsStats from 'bundle-loader?lazy!../../pages/statistics/stats';
 import loadStatisticsCharts from 'bundle-loader?lazy!../../pages/statistics/charts';
 import loadStatisticsRealtime from 'bundle-loader?lazy!../../pages/statistics/realtime';
@@ -25,9 +26,8 @@ import Bundle from '../../core/Bundle';
 
 // Dashboard component is loaded directly as an example of server side rendering
 import Dashboard from '../../pages/dashboard/Dashboard';
-import AgentDashboard from '../../pages/agentDashboard/AgentDashboard';
 
-
+const AgentDashboardBundle = Bundle.generateBundle(loadAgentDashboard);
 const StatisticsStatsBundle = Bundle.generateBundle(loadStatisticsStats);
 const StatisticsChartsBundle = Bundle.generateBundle(loadStatisticsCharts);
 const StatisticsRealtimeBundle = Bundle.generateBundle(loadStatisticsRealtime);
@@ -73,7 +73,7 @@ class Layout extends React.Component {
           <main className={s.content}>
             <Switch>
               <Route path="/app" exact component={Dashboard} />
-              <Route path="/app/agent" exact component={AgentDashboard} />
+              <Route path="/app/agent" exact component={AgentDashboardBundle} />
               <Route path="/app/another" exact component={AnotherBundle} />
               <Route path="/app/statistics/stats" exact component={StatisticsStatsBundle} />
               <Route path="/app/statistics/charts" exact component={StatisticsChartsBundle} />

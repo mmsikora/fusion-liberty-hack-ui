@@ -3,14 +3,25 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {
-  Row, Col, Form, FormGroup, Label, Input, ButtonToolbar, Button
+  Row, Col, Form, FormGroup, Label, Input, Button
 } from 'reactstrap';
+import $ from 'jquery';
+/* eslint-disable */
+import 'imports-loader?jQuery=jquery,this=>window!webpack-raphael/raphael';
+import 'imports-loader?jQuery=jquery,this=>window!govpredict-morris/morris';
+import 'imports-loader?jQuery=jquery,this=>window!flot';
+import 'imports-loader?jQuery=jquery,this=>window!flot/jquery.flot.time';
+import 'imports-loader?jQuery=jquery,this=>window!jquery.flot.animator/jquery.flot.animator';
+import 'imports-loader?jQuery=jquery,this=>window!easy-pie-chart/dist/jquery.easypiechart.js';
+import 'imports-loader?jQuery=jquery,this=>window!jquery-sparkline';
+/* eslint-enable */
 
 /** https://www.npmjs.com/package/format-number */
 import format from 'format-number';
 
 import Widget from '../../components/Widget';
 import s from './Dashboard.scss';
+// import s2 from '../statistics/charts/Charts.scss';
 
 const accountingFormat = format({ prefix: '$' });
 
@@ -29,7 +40,6 @@ class AgentDashboard extends React.Component {
     agents: {}
   };
 
-
   constructor(props) {
     super(props);
 
@@ -37,6 +47,8 @@ class AgentDashboard extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
+    this.initEasyPieChart = this.initEasyPieChart.bind(this);
+    this.updateEasyPieChart = this.updateEasyPieChart.bind(this);
 
     this.state = {
       agentId: '',
@@ -46,16 +58,34 @@ class AgentDashboard extends React.Component {
 
   }
 
+  componentDidMount() {
+    this.initEasyPieChart();
+    window.addEventListener('resize', this.onResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize);
+  }
+
+  componentDidUpdate() {
+    this.updateEasyPieChart();
+  }
+
+  onResize() {
+  }
+
   setAgentData() {
     const { agentId } = this.state;
     const { agents } = this.props;
-    const agent = agents[String(agentId)];
+    const agent = agentId ? agents[String(agentId)] : null;
     if (agent) {
       agent.totalNewPolicies = agent.states ?
         agent.states.reduce((total, state) => {
           return total + Number(state.amount);
         }, 0) : 0;
 
+      agent.premiumsRatio = 100 * (agent.totalAgentPremium / agent.totalWrittenPremium);
+      // console.log('setAgentData() - agent: ', agent);
       this.setState({
         agent,
         errorMessage: ''
@@ -67,6 +97,24 @@ class AgentDashboard extends React.Component {
         errorMessage: 'hmm. Agent not found'
       });
     }
+  }
+
+  initEasyPieChart() {
+    $(this.easyPieChart).easyPieChart({
+      barColor: '#5dc4bf',
+      trackColor: '#ddd',
+      scaleColor: false,
+      lineWidth: 10,
+      size: 120,
+    });
+  }
+
+  updateEasyPieChart() {
+    const {agent} = this.state;
+    const premiumRatio = agent.premiumsRatio || 0;
+    // console.log('calling updateEasyPieChart! premiumRatio: ', premiumRatio);
+
+    $(this.easyPieChart).data('easyPieChart').update(premiumRatio);
   }
 
   handleChange(event) {
@@ -91,6 +139,8 @@ class AgentDashboard extends React.Component {
     // const { agentIds } = this.props;
     // console.log(`all agent ids loaded: ${agentIds.join(', ')}`);
     const { agentId, agent } = this.state;
+
+    const statsPremiumsRatio = agent.premiumsRatio ? String(Math.round(agent.premiumsRatio)) : '0';
 
     return (
       <div className={`${s.root}`}>
@@ -166,16 +216,7 @@ class AgentDashboard extends React.Component {
                     <Input type="text" name="totalAgentPremium" id="totalAgentPremium" value={accountingFormat(agent.totalAgentPremium)} className="input-transparent" />
                   </Col>
                 </FormGroup>
-                {/* <FormGroup row>
-                  <Col md={3}>
-                    <Label htmlFor="totalWrittenPremium" className="col-form-label float-md-left">
-                      Total Written Premium
-                    </Label>
-                  </Col>
-                  <Col md={9}>
-                    <Input type="text" name="totalWrittenPremium" id="totalWrittenPremium" value={accountingFormat(agent.totalWrittenPremium)} className="input-transparent" />
-                  </Col>
-                </FormGroup> */}
+
                 <FormGroup row>
                   <Col md={3}>
                     <Label htmlFor="totalAgentCommission" className="col-form-label float-md-left">
@@ -186,17 +227,6 @@ class AgentDashboard extends React.Component {
                     <Input type="text" name="totalAgentCommission" id="totalAgentCommission" value={accountingFormat(agent.totalAgentCommission)} className="input-transparent" />
                   </Col>
                 </FormGroup>
-
-                {/* <FormGroup row>
-                  <Col md={3}>
-                    <Label htmlFor="totalWrittenCommission" className="col-form-label float-md-left">
-                      Total Written Commission
-                    </Label>
-                  </Col>
-                  <Col md={9}>
-                    <Input type="text" name="totalWrittenCommission" id="totalWrittenCommission" value={accountingFormat(agent.totalWrittenCommission)} className="input-transparent" />
-                  </Col>
-                </FormGroup> */}
 
                 <FormGroup row>
                   <Col md={3}>
@@ -209,47 +239,31 @@ class AgentDashboard extends React.Component {
                   </Col>
                 </FormGroup>
 
-                {/* <FormGroup row>
-                  <Col md={3}>
-                    <Label htmlFor="averageWrittenCommission" className="col-form-label float-md-left">
-                      Average Written Commission
-                    </Label>
-                  </Col>
-                  <Col md={9}>
-                    <Input type="text" name="averageWrittenCommission" id="averageWrittenCommission" value={accountingFormat(agent.averageWrittenCommission)} className="input-transparent" />
-                  </Col>
-                </FormGroup> */}
-
-                {/* <FormGroup row>
-                  <Col md={3}>
-                    <Label htmlFor="averageAgentExposure" className="col-form-label float-md-left">
-                      Average Exposure
-                    </Label>
-                  </Col>
-                  <Col md={9}>
-                    <Input type="text" name="averageAgentExposure" id="averageAgentExposure" value={agent.averageAgentExposure} className="input-transparent" />
-                  </Col>
-                </FormGroup> */}
-
-                {/* <FormGroup row>
-                  <Col md={3}>
-                    <Label htmlFor="averageWrittenExposure" className="col-form-label float-md-left">
-                      Average Written Exposure
-                    </Label>
-                  </Col>
-                  <Col md={9}>
-                    <Input type="text" name="averageWrittenExposure" id="averageWrittenExposure" value={agent.averageWrittenExposure} className="input-transparent" />
-                  </Col>
-                </FormGroup> */}
               </Form>
 
-              {/* <div>
-                <p className="lead">
-                  Id:  <strong>{ agent.niprId }</strong> <br />
-                  Total Agent Premium: <strong>{ }</strong> <br />
-                </p>
-              </div> */}
+            </Widget>
+          </Col>
+        </Row>
 
+        <Row>
+          <Col lg={6} xl={4} xs={12}>
+            <Widget
+              title={<h5> <span className="fw-semi-bold">Comparison</span></h5>}
+              close collapse
+            >
+              <div className="clearfix">
+                <h4 className="">Percentage of Total Premiums</h4>
+
+                <div className="text-center">
+                  <div ref={(r) => { this.easyPieChart = r; }} className="easy-pie-chart mb-lg" data-percent="0">{`${String(statsPremiumsRatio)}`} &#37;
+                  </div>
+                </div>
+                { agent.totalAgentPremium &&
+                  <p className="fs-mini text-muted">
+                  TotalAgent ( {accountingFormat(agent.totalAgentPremium)}) vs Total Written Premiums ({accountingFormat(agent.totalWrittenPremium)})
+                  </p>
+                }
+              </div>
             </Widget>
           </Col>
         </Row>

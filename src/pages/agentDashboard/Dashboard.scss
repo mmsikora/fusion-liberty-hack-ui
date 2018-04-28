@@ -3,4 +3,23 @@
 
 .root {
   // some code
+      /*   Easy Pie Chart    */
+  :global {
+
+    .easy-pie-chart {
+      position: relative;
+      display: inline-block;
+      line-height: 120px;
+      height: 120px;
+      width: 120px;
+      text-align: center;
+      color: $text-color;
+
+      canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    }
+  }
 }
