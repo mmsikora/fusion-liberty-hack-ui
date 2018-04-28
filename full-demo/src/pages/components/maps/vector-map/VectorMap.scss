@@ -1,0 +1,18 @@
+@import '../../../../styles/app';
+
+:global {
+  @import '../../../../../node_modules/jqvmap/dist/jqvmap.css';
+}
+
+.map {
+  height: 100%;
+
+  * {
+    //bs3 fix
+    @include box-sizing(content-box);
+  }
+}
+
+.container {
+  height: 100%;
+}

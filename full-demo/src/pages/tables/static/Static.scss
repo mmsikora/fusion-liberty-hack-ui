@@ -1,0 +1,13 @@
+@import '../../../styles/app';
+
+:global {
+  @import '../../../../node_modules/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox';
+
+  .text-center svg {
+    display: inline-block;
+  }
+}
+
+.imgRounded {
+  border-radius: $border-radius;
+}

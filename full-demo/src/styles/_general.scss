@@ -1,0 +1,145 @@
+html {
+  font-size: $font-size-initial;
+}
+
+body {
+  overflow-x: hidden;
+  color: $text-color;
+  background-attachment: fixed, fixed;
+
+  @include background-radial-gradient (
+    ellipse, farthest-side, 10%, 0,
+    $bg-gradient-color-1 20%, $bg-gradient-color-2
+  );
+}
+
+html,
+body {
+  height: 100%;
+}
+
+a {
+  cursor: pointer;
+  transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+th {
+  font-weight: 600;
+}
+
+label {
+  margin-bottom: 0.3rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: $font-weight-base;
+
+  small {
+    color: $text-muted;
+    font-weight: $font-weight-base;
+  }
+}
+
+button {
+  cursor: pointer;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: $font-family-base;
+}
+
+input[type=search],
+input.search {
+  padding-left: 26px;
+  background: url(../images/search.png) 5px 6px no-repeat $input-bg;
+
+  &.input-transparent {
+    border: none;
+    color: $widget-color;
+    background: url(../images/search.png) 5px 5px no-repeat $widget-bg;
+
+    @include placeholder(rgba(#eee, 0.76));
+  }
+}
+
+ul ul,
+ol ul {
+  list-style: none;
+}
+
+ul:not(.text-list),
+ol:not(.text-list) {
+  list-style: none;
+  padding: 0;
+}
+
+//setting default iframe behaviour to border box
+//so it behaves normally within .control-row
+iframe {
+  @include box-sizing(border-box);
+}
+
+//opera is buggy? no chrome is buggy! really strange fix
+fieldset {
+  width: 100%;
+  //Thanks to johan@holmweb.se for that fix
+  min-width: 0;
+}
+
+form {
+  margin-bottom: 0;
+}
+
+.btn {
+  @include transition(background-color 0.2s);
+
+  font-family: $font-family-sans-serif;
+}
+
+.form-control {
+  font-family: $font-family-sans-serif;
+}
+
+strong,
+b {
+  font-weight: bold;
+}
+
+svg {
+  height: 100%;
+  width: 100%;
+  display: block;
+}
+
+.box {
+  border-radius: $border-radius-base;
+  padding: 5px;
+  text-align: center;
+  margin-bottom: $widget-mb;
+  background: $widget-bg;
+  color: $widget-color;
+
+  .description {
+    font-weight: normal;
+    text-align: center;
+    margin: 10px -5px;
+  }
+
+  .icon,
+  .big-text {
+    margin-top: 15px;
+    font-size: 36px;
+    line-height: 36px;
+    height: 36px;
+    font-weight: bold;
+  }
+}

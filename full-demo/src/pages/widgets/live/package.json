@@ -1,0 +1,6 @@
+{
+  "name": "live",
+  "version": "0.0.0",
+  "main": "./Live.js",
+  "private": true
+}

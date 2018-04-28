@@ -1,0 +1,31 @@
+@import '../../styles/app';
+
+.root {
+  // some classes
+}
+
+.wrap {
+  display: flex;
+
+  @media (max-width: breakpoint-max('sm')) {
+    flex-direction: column;
+  }
+
+  &:global(.sidebar-right) {
+    flex-direction: row-reverse;
+  }
+}
+
+.content {
+  position: relative;
+  padding: 25px 2.5641%;
+  flex: 1;
+
+  @include transition(opacity 0.2s);
+}
+
+.footer {
+  position: absolute;
+  bottom: 15px;
+  color: $text-muted;
+}

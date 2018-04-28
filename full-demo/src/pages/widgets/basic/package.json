@@ -1,0 +1,6 @@
+{
+  "name": "basic",
+  "version": "0.0.0",
+  "main": "./Basic.js",
+  "private": true
+}
