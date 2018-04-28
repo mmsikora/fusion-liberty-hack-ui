@@ -3,14 +3,25 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import {
-  Row, Col, Form, FormGroup, Label, Input, ButtonToolbar, Button
+  Row, Col, Form, FormGroup, Label, Input, Button
 } from 'reactstrap';
+import $ from 'jquery';
+/* eslint-disable */
+import 'imports-loader?jQuery=jquery,this=>window!webpack-raphael/raphael';
+import 'imports-loader?jQuery=jquery,this=>window!govpredict-morris/morris';
+import 'imports-loader?jQuery=jquery,this=>window!flot';
+import 'imports-loader?jQuery=jquery,this=>window!flot/jquery.flot.time';
+import 'imports-loader?jQuery=jquery,this=>window!jquery.flot.animator/jquery.flot.animator';
+import 'imports-loader?jQuery=jquery,this=>window!easy-pie-chart/dist/jquery.easypiechart.js';
+import 'imports-loader?jQuery=jquery,this=>window!jquery-sparkline';
+/* eslint-enable */
 
 /** https://www.npmjs.com/package/format-number */
 import format from 'format-number';
 
 import Widget from '../../components/Widget';
 import s from './Dashboard.scss';
+// import s2 from '../statistics/charts/Charts.scss';
 
 const accountingFormat = format({ prefix: '$' });
 
@@ -29,7 +40,6 @@ class AgentDashboard extends React.Component {
     agents: {}
   };
 
-
   constructor(props) {
     super(props);
 
@@ -37,6 +47,8 @@ class AgentDashboard extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
+    this.initEasyPieChart = this.initEasyPieChart.bind(this);
+    this.updateEasyPieChart = this.updateEasyPieChart.bind(this);
 
     this.state = {
       agentId: '',
@@ -46,11 +58,34 @@ class AgentDashboard extends React.Component {
 
   }
 
+  componentDidMount() {
+    this.initEasyPieChart();
+    window.addEventListener('resize', this.onResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onResize);
+  }
+
+  componentDidUpdate() {
+    this.updateEasyPieChart();
+  }
+
+  onResize() {
+  }
+
   setAgentData() {
     const { agentId } = this.state;
     const { agents } = this.props;
-    const agent = agents[String(agentId)];
+    const agent = agentId ? agents[String(agentId)] : null;
     if (agent) {
+      agent.totalNewPolicies = agent.states ?
+        agent.states.reduce((total, state) => {
+          return total + Number(state.amount);
+        }, 0) : 0;
+
+      agent.premiumsRatio = 100 * (agent.totalAgentPremium / agent.totalWrittenPremium);
+      // console.log('setAgentData() - agent: ', agent);
       this.setState({
         agent,
         errorMessage: ''
@@ -62,6 +97,24 @@ class AgentDashboard extends React.Component {
         errorMessage: 'hmm. Agent not found'
       });
     }
+  }
+
+  initEasyPieChart() {
+    $(this.easyPieChart).easyPieChart({
+      barColor: '#5dc4bf',
+      trackColor: '#ddd',
+      scaleColor: false,
+      lineWidth: 10,
+      size: 120,
+    });
+  }
+
+  updateEasyPieChart() {
+    const {agent} = this.state;
+    const premiumRatio = agent.premiumsRatio || 0;
+    // console.log('calling updateEasyPieChart! premiumRatio: ', premiumRatio);
+
+    $(this.easyPieChart).data('easyPieChart').update(premiumRatio);
   }
 
   handleChange(event) {
@@ -83,15 +136,15 @@ class AgentDashboard extends React.Component {
   }
 
   render() {
-    const { agentIds } = this.props;
-    console.log(`all agent ids loaded: ${agentIds.join(', ')}`);
-    // const agent = agents[String(agentIds[0])];
-
+    // const { agentIds } = this.props;
+    // console.log(`all agent ids loaded: ${agentIds.join(', ')}`);
     const { agentId, agent } = this.state;
 
+    const statsPremiumsRatio = agent.premiumsRatio ? String(Math.round(agent.premiumsRatio)) : '0';
+
     return (
-      <div className={s.root}>
-        <h1 className="page-title">Agent</h1>
+      <div className={`${s.root}`}>
+        <h1 className="page-title">Agent <strong>Portal</strong></h1>
         <Row>
           <Col lg={8}>
             <Widget>
@@ -102,19 +155,46 @@ class AgentDashboard extends React.Component {
                       Enter Your Agent ID
                     </Label>
                   </Col>
-                  <Col md={9}>
+                  <Col md={5}>
                     <Input type="text" name="agentId" id="agentId" value={agentId} className="input-transparent" onChange={this.handleChange} />
                   </Col>
-                </FormGroup>
-                <div className="form-actions">
-                  <ButtonToolbar className="justify-content-md-center">
+                  <Col md={4}>
                     <Button type="submit" color="success">Submit</Button>
-                    <Button type="button" color="secondary" onClick={this.handleCancel}>Cancel</Button>
-                  </ButtonToolbar>
-                </div>
+                    <Button type="button" color="secondary" onClick={this.handleCancel}>Clear</Button>
+                  </Col>
+                </FormGroup>
               </Form>
             </Widget>
-            <Widget title={<h5>Agent <span className="fw-semi-bold">Data</span></h5>}>
+
+
+            <Widget title={<h5><span className="fw-semi-bold">Overview</span></h5>}>
+
+              <Row>
+                <Col lg={6} md={6} sm={6}>
+                  <div className="box">
+                    {agent.totalNewPolicies &&
+                      <div className="description">
+                        <i className="fa fa-briefcase" />&nbsp;
+                        <strong>{agent.totalNewPolicies}</strong> new business policies
+                      </div>
+                    }
+                  </div>
+                </Col>
+
+                <Col lg={6} md={6} sm={6}>
+                  <div className="box">
+                    {agent.averageAgentExposure &&
+                      <div className="description">
+                        <i className="fa fa-fire" />&nbsp;
+                        <strong> {agent.averageAgentExposure}</strong> Average Exposure
+                    </div>
+                    }
+                  </div>
+                </Col>
+              </Row>
+
+              <br />
+
               <Form >
                 <FormGroup row>
                   <Col md={3}>
@@ -129,27 +209,18 @@ class AgentDashboard extends React.Component {
                 <FormGroup row>
                   <Col md={3}>
                     <Label htmlFor="totalAgentPremium" className="col-form-label float-md-left">
-                      Total Agent Premium
+                      Total Premium
                     </Label>
                   </Col>
                   <Col md={9}>
                     <Input type="text" name="totalAgentPremium" id="totalAgentPremium" value={accountingFormat(agent.totalAgentPremium)} className="input-transparent" />
                   </Col>
                 </FormGroup>
-                <FormGroup row>
-                  <Col md={3}>
-                    <Label htmlFor="totalWrittenPremium" className="col-form-label float-md-left">
-                      Total Written Premium
-                    </Label>
-                  </Col>
-                  <Col md={9}>
-                    <Input type="text" name="totalWrittenPremium" id="totalWrittenPremium" value={accountingFormat(agent.totalWrittenPremium)} className="input-transparent" />
-                  </Col>
-                </FormGroup>
+
                 <FormGroup row>
                   <Col md={3}>
                     <Label htmlFor="totalAgentCommission" className="col-form-label float-md-left">
-                      Total Agent Commission
+                      Total Commission
                     </Label>
                   </Col>
                   <Col md={9}>
@@ -159,19 +230,8 @@ class AgentDashboard extends React.Component {
 
                 <FormGroup row>
                   <Col md={3}>
-                    <Label htmlFor="totalWrittenCommission" className="col-form-label float-md-left">
-                      Total Written Commission
-                    </Label>
-                  </Col>
-                  <Col md={9}>
-                    <Input type="text" name="totalWrittenCommission" id="totalWrittenCommission" value={accountingFormat(agent.totalWrittenCommission)} className="input-transparent" />
-                  </Col>
-                </FormGroup>
-
-                <FormGroup row>
-                  <Col md={3}>
                     <Label htmlFor="averageAgentCommission" className="col-form-label float-md-left">
-                      Average Agent Commission
+                      Average Commission
                     </Label>
                   </Col>
                   <Col md={9}>
@@ -179,49 +239,35 @@ class AgentDashboard extends React.Component {
                   </Col>
                 </FormGroup>
 
-                <FormGroup row>
-                  <Col md={3}>
-                    <Label htmlFor="averageWrittenCommission" className="col-form-label float-md-left">
-                      Average Written Commission
-                    </Label>
-                  </Col>
-                  <Col md={9}>
-                    <Input type="text" name="averageWrittenCommission" id="averageWrittenCommission" value={accountingFormat(agent.averageWrittenCommission)} className="input-transparent" />
-                  </Col>
-                </FormGroup>
-
-                <FormGroup row>
-                  <Col md={3}>
-                    <Label htmlFor="averageAgentExposure" className="col-form-label float-md-left">
-                      Average Agent Exposure
-                    </Label>
-                  </Col>
-                  <Col md={9}>
-                    <Input type="text" name="averageAgentExposure" id="averageAgentExposure" value={agent.averageAgentExposure} className="input-transparent" />
-                  </Col>
-                </FormGroup>
-
-                <FormGroup row>
-                  <Col md={3}>
-                    <Label htmlFor="averageWrittenExposure" className="col-form-label float-md-left">
-                      Average Written Exposure
-                    </Label>
-                  </Col>
-                  <Col md={9}>
-                    <Input type="text" name="averageWrittenExposure" id="averageWrittenExposure" value={agent.averageWrittenExposure} className="input-transparent" />
-                  </Col>
-                </FormGroup>
               </Form>
 
-              {/* <div>
-                <p className="lead">
-                  Id:  <strong>{ agent.niprId }</strong> <br />
-                  Total Agent Premium: <strong>{ }</strong> <br />
-                </p>
-              </div> */}
             </Widget>
           </Col>
         </Row>
+
+        <Row>
+          <Col lg={6} xl={4} xs={12}>
+            <Widget
+              title={<h5> <span className="fw-semi-bold">Comparison</span></h5>}
+              close collapse
+            >
+              <div className="clearfix">
+                <h4 className="">Percentage of Total Premiums</h4>
+
+                <div className="text-center">
+                  <div ref={(r) => { this.easyPieChart = r; }} className="easy-pie-chart mb-lg" data-percent="0">{`${String(statsPremiumsRatio)}`} &#37;
+                  </div>
+                </div>
+                { agent.totalAgentPremium &&
+                  <p className="fs-mini text-muted">
+                  TotalAgent ( {accountingFormat(agent.totalAgentPremium)}) vs Total Written Premiums ({accountingFormat(agent.totalWrittenPremium)})
+                  </p>
+                }
+              </div>
+            </Widget>
+          </Col>
+        </Row>
+
       </div>
     );
   }
