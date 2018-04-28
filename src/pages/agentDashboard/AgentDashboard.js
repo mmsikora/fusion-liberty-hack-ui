@@ -152,6 +152,39 @@ class AgentDashboard extends React.Component {
     return 'danger';
   }
 
+  createTable(classCodes) {
+    if(classCodes == null) {
+      return '';
+    }
+    let table = []
+    table.push(
+      <FormGroup row>
+        <Col md={3}>
+          <strong>Amount</strong>
+        </Col>
+        <Col md={9}>
+          <strong>Description</strong>
+        </Col>
+      </FormGroup>
+    );
+    // Outer loop to create parent
+    for (let i = 0; i < classCodes.length; i++) {
+      table.push(
+        <FormGroup row>
+          <Col md={3}>
+            <Label className="col-form-label float-md-left">
+              {classCodes[i].amount}
+            </Label>
+          </Col>
+          <Col md={9}>
+            {classCodes[i].classCdDesc}
+          </Col>
+        </FormGroup>
+      );
+    }
+    return table;
+  }
+
   render() {
     // const { agentIds } = this.props;
     // console.log(`all agent ids loaded: ${agentIds.join(', ')}`);
@@ -285,7 +318,7 @@ class AgentDashboard extends React.Component {
             </Col>
             <Col lg={4} md={12} xs={12}>
             <Widget
-              title={<h5><i className="fa fa-arrow-right" /> Agent Exposure</h5>}
+              title={<h5><i className="fa fa-arrow-right" /> Agent Exposure</h5 >} close collapse
             >
               <h5 className="mt-0 mb-xs font-weight-normal">Agent's Exposure: {agent.averageAgentExposure}</h5><br/>
               <Progress color={this.colorProgress(agent.averageAgentExposure)} value={this.scaleProgress(agent.averageAgentExposure)} className="progress-lg" />
@@ -294,7 +327,18 @@ class AgentDashboard extends React.Component {
             </Widget>
           </Col>
         </Row>
-
+        <Row>
+          <Col lg={6} xl={6} xs={6}>
+            <Widget
+              title={<h5> <span className="fw-semi-bold">Policy Classes Written</span></h5>}
+              close collapse
+            >
+              
+                  {this.createTable(agent.classCodes)}
+              
+            </Widget>
+          </Col>
+        </Row>
       </div>
     );
   }
