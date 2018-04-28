@@ -67,18 +67,19 @@ export function fetchAgents() {
 }
 
 
-function requestAgent() {
+function requestAgent(agentId) {
   return {
     type: FETCH_AGENT_REQUEST,
-    isFetching: true
+    isFetching: true,
+    agentId
   };
 }
 
-export function recieveAgent(agentIds) {
+export function recieveAgent(agent) {
   return {
     type: FETCH_AGENT_SUCCESS,
     isFetching: false,
-    agentIds
+    agent
   };
 }
 
@@ -95,9 +96,11 @@ export function fetchAgent(agentId) {
     method: 'GET'
   };
 
+  console.log('calling fetchAgent! - agentId: ', agentId);
+
   return (dispatch) => {
     // We dispatch requestLogin to kickoff the call to the API
-    dispatch(requestAgent());
+    dispatch(requestAgent(agentId));
 
     return fetch(`${BASE_API_URL}/agent/${agentId}`, config)
       .then((response) => {

@@ -61,6 +61,7 @@ module.exports = {
       'comma-dangle': ['off'],
       'padded-blocks': ['off'],
       'arrow-body-style': 'off',
+      'no-case-declarations': 'off',
       'react/no-unused-prop-types': 'off',
       'react/forbid-prop-types': 'off'
 

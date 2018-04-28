@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import { Row, Col } from 'reactstrap';
 
-// import { fetchAgent } from '../../actions/agents';
+import { fetchAgent } from '../../actions/agents';
 import Widget from '../../components/Widget';
 import s from './Dashboard.scss';
 
@@ -21,8 +21,14 @@ class AgentDashboard extends React.Component {
     agentIds: []
   };
 
-  constructor(props) {
-    super(props);
+  componentDidMount() {
+
+    const { agentIds, dispatch } = this.props;
+    if (agentIds.length > 0) {
+      dispatch(fetchAgent(agentIds[0]));
+      dispatch(fetchAgent(agentIds[1]));
+    }
+
   }
 
   render() {
